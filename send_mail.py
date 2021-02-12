@@ -1,35 +1,34 @@
-import smtplib, ssl
+import smtplib
+import ssl
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 
-#Email Account
-email_sender_account = "cron@bausecreative.de"
-email_sender_username = "cron@bausecreative.de"
-email_sender_password = "Ruamzuzla9078#"
-email_smtp_server = "mail.bausecreative.de"
-email_smtp_port = 465
 
-#Email Content
-email_recepients = ["info@bausecreative.de", "olebause@hotmail.de"]
-email_subject = "Test"
-email_body = "Test Email."
+class SendMail:
+    def __init__(self):
+        self.email_sender_account = "cron@bausecreative.de"
+        self.email_sender_username = "cron@bausecreative.de"
+        self.email_sender_password = "Ruamzuzla9078#"
+        self.email_smtp_server = "mail.bausecreative.de"
+        self.email_smtp_port = 465
 
-#login to email server
-context = ssl.create_default_context()
-server = smtplib.SMTP_SSL(email_smtp_server, email_smtp_port, context=context)
-#server.starttls()
-server.login(email_sender_username, email_sender_password)
+    def send_mail(self, email_subject, email_body, email_recepients):
+        # login to email server
+        context = ssl.create_default_context()
+        server = smtplib.SMTP_SSL(self.email_smtp_server, self.email_smtp_port, context=context)
+        # server.starttls()
+        server.login(self.email_sender_username, self.email_sender_password)
 
-#For loop, sending emails to all email recipients
-for recipient in email_recepients:
-    print(f"Sending email to {recipient}")
-    message = MIMEMultipart('alternative')
-    message['From'] = email_sender_account
-    message['To'] = recipient
-    message['Subject'] = email_subject
-    message.attach(MIMEText(email_body, 'html'))
-    text = message.as_string()
-    server.sendmail(email_sender_account, recipient, text)
+        for recipient in email_recepients:
+            print(f"Sending email to {recipient}")
+            message = MIMEMultipart('alternative')
+            message['From'] = self.email_sender_account
+            message['To'] = recipient
+            message['Subject'] = email_subject
+            message.attach(MIMEText(email_body, 'html'))
+            text = message.as_string()
+            server.sendmail(self.email_sender_account, recipient, text)
 
-#All emails sent, log out.
-server.quit()
+        # All emails sent, log out.
+        server.quit()
+
